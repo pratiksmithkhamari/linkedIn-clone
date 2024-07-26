@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     userId: {
       type: String,
+      unique:true,
       required: true,
     },
     bio: {

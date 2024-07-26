@@ -1,4 +1,4 @@
-import mongoose, { Model, Document } from "mongoose";
+import mongoose, { Model, Document, Schema } from "mongoose";
 import { UserInterFace } from "./userModel";
 
 export interface PostInterface {
@@ -20,12 +20,27 @@ const postSchema = new mongoose.Schema<PostDocument>(
       type: String,
       required: true,
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    user: { 
+      userId:{
+        type:String,
+        required:true
     },
+    profilePhoto:{
+        type:String,
+        required:true
+    },
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName:{
+        type:String,
+        required:true
+    }
+     },
     imageUrl: {
       type: String,
+      default:''
     },
     likes: [
       {

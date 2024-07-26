@@ -13,13 +13,16 @@ import Image from "next/image";
 import UserAvatar from "@/utils/shareable";
 import { Textarea } from "./ui/textarea";
 import { Images } from "lucide-react";
-import { useRef, useState } from "react";
+import { SetStateAction, useRef, useState } from "react";
 import { readFileAsString } from "@/lib/utils";
 import { createPost } from "@/lib/serverAction";
+import { toast, useToast } from "./ui/use-toast";
+
 
 export function DialogeBox({
   setShow,
   show,
+
   src,
 }: {
   setShow: any;
@@ -28,11 +31,15 @@ export function DialogeBox({
 }) {
   const [ImgDataUrl, setImgDataUrl] = useState<string>("");
   const [inputtext, setInputText] = useState<string>("");
+
+
+const {toast }= useToast()
+
   const refImg = useRef<HTMLInputElement>(null);
   const handleImgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
     if (file) {
-      const readFile = await readFileAsString(file);
+      const readFile: SetStateAction<string> = await readFileAsString(file);
       setImgDataUrl(readFile);
     }
   };
@@ -40,26 +47,32 @@ export function DialogeBox({
     setInputText(e.target.value);
   };
 
-  const postInputHandler = async (formData:FormData)=>{
-    const data = await formData.get('inputText') as string
-      //  console.log(data);
+  const postInputHandler = async (formData: FormData) => {
+    const data = (await formData.get("inputText")) as string;
+    //  console.log(data);
 
-       try {
-        await createPost(inputtext,ImgDataUrl)
-       } catch (error) {
-        new Error('error in post of data')
-       }
-  }
+    try {
+      await createPost(inputtext, ImgDataUrl);
+    } catch (error) {
+      new Error("error in post of data");
+    }
+    toast({ description: "Post uploaded Successfully" });
+    setInputText("");
+    setImgDataUrl("")
+    setShow(false);
+   
+  };
 
   return (
     <Dialog open={show}>
       <DialogContent
-        className="sm:max-w-[425px]"
+        className="sm:max-w-[425px] "
         onInteractOutside={() => setShow(false)}
       >
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-4 hover:bg-zinc-200 w-fit p-3 rounded-2xl cursor-pointer">
+              
               <UserAvatar srcData={src?.imageUrl} />
               <div className="flex flex-col">
                 <h2 className="text-lg font-bold">{`${src?.firstName} ${src?.lastName}`}</h2>
@@ -80,7 +93,7 @@ export function DialogeBox({
               <Image
                 src={ImgDataUrl}
                 alt="your selected image"
-                className="w-full"
+                className="w-full max-h-[400px] bg-center"
                 height={300}
                 width={300}
               />
@@ -102,7 +115,10 @@ export function DialogeBox({
                 onClick={() => refImg.current?.click()}
                 className="cursor-pointer text-zinc-500 text-3xl"
               />
-              <Button type="submit" className="bg-blue-600 rounded-2xl">
+              <Button
+                type="submit"
+                className="bg-blue-600 rounded-2xl active:bg-blue-700"
+              >
                 Post
               </Button>
             </div>
