@@ -14,3 +14,19 @@ const UserAvatar = ({ srcData }: { srcData: string }) => {
 };
 
 export default UserAvatar;
+
+
+export const fetchNews = async () => {
+  try {
+    const response = await fetch(
+      "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=edabfdb904954497bd3dd543d4106160"
+    );
+    const data = await response.json();
+    console.log('skdfjksdf',data.articles);
+    
+    return data.articles
+
+  } catch (error) {
+    console.error("Error fetching news:", error);
+  }
+};

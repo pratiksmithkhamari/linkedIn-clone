@@ -4,7 +4,7 @@ import React from "react";
 
 const Sidebar = ({ userDetails }: { userDetails: any }) => {
   return (
-    <div className="w-full relative bg-white ">
+    <div className="w-full  sm:block hidden absolute  left-0 bottom-[400px]">
       <Image
         src={"/banner.png"}
         alt="banner img"
