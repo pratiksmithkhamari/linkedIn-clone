@@ -12,8 +12,8 @@ import { Button } from "./ui/button";
 const Singlepost = ({ post }: { post: any }) => {
   // console.log("singlepost console", post);
   const { user } = useUser();
-  const findUser = user?.id == post?.user?.userId
-  
+  const findUser = user?.id == post?.user?.userId;
+
   return (
     <div className="w-full my-3 m-0 sm:m-2 border-2 rounded-md shadow-md ">
       <div className="flex gap-7 m-2 ml-2">
@@ -41,11 +41,18 @@ const Singlepost = ({ post }: { post: any }) => {
               <ReactTimeAgo date={new Date(post?.createdAt)} />•
             </p>
           </div>
-          {findUser && <Button variant={'ghost'} size={'icon'} className="rotate-45 active:bg-slate-200 rounded-full" onClick={()=>{
-            deletePost(post._id)
-          }}>
-            {<Plus />}
-          </Button>}
+          {findUser && (
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              className="rotate-45 active:bg-slate-200 rounded-full"
+              onClick={() => {
+                deletePost(post._id);
+              }}
+            >
+              {<Plus />}
+            </Button>
+          )}
         </div>
       </div>
       <div className="w-full">
@@ -57,13 +64,15 @@ const Singlepost = ({ post }: { post: any }) => {
               width={400}
               src={post?.imageUrl}
               alt="content"
+              blurDataURL="blur"
+              placeholder="blur"
               className="w-full max-h-[600px] mx-auto object-contain"
             />
           )}
         </div>
       </div>
       <div className="flex w-full justify-center items-center p-3 ">
-        <SocialMedia />
+        <SocialMedia post={post} />
       </div>
     </div>
   );
