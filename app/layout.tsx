@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 import {ClerkProvider} from "@clerk/nextjs"
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "LinkedIn",
@@ -21,7 +22,10 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <Navbar />
         <div className="flex-1 w-full bg-[#F4F2EE]">
-          <main className="max-w-[80%] mx-auto ">{children}</main>
+          <main className="max-w-[80%]   mx-auto ">{children}
+            
+          </main>
+          <Footer />
         </div>
       </body>
     </html>

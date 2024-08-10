@@ -1,6 +1,7 @@
 "use server";
 
 import { dbConnection } from "@/connection/dbConnection";
+import { Comment } from "@/models/commentModel";
 import { Post } from "@/models/postModel";
 import { UserInterFace } from "@/models/userModel";
 import { useUser } from "@clerk/nextjs";
@@ -55,15 +56,19 @@ export const createPost = async (inputText: string, ImgDataUrl: string) => {
     }
     revalidatePath("/");
   } catch (error: any) {
-    throw new Error(error);
+    // throw new Error(error);
+    console.log("error", error);
   }
 };
 //fetching all post
 export const fetchAllPost = async () => {
   await dbConnection();
   try {
-    const post = await Post.find().sort({ createdAt: -1 });
+    const post = await Post.find()
+      .sort({ createdAt: -1 })
+      .populate({ path: "comments", options: { sort: { createdAt: -1 } } });
     console.log("server action fetching all post", post);
+    if (!post) return [];
     return JSON.parse(JSON.stringify(post));
   } catch (error) {
     console.log(error);
@@ -73,68 +78,68 @@ export const fetchAllPost = async () => {
 //delete a post
 
 export const deletePost = async (postId: string) => {
-    await dbConnection();
+  await dbConnection();
+  const user = await currentUser();
+  if (!user) {
+    return { error: "You are not logged in" };
+  }
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    return { error: "Invalid post ID" };
+  }
+  const post = await Post.findById(postId);
+  if (!post) {
+    return { error: "Post not found" };
+  }
+  if (post?.user?.userId !== user.id) {
+    return { error: "You are not authorized to delete this post" };
+  }
+  try {
+    await Post.deleteOne({ _id: postId });
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    console.error("Error in deleting the post:", error);
+    return { error: "Error in deleting the post" };
+  }
+};
+
+// code for creating a comments
+
+export const fetchComments = async (postId: string, formValue: FormData) => {
+  try {
     const user = await currentUser();
-    if (!user) {
-      return { error: "You are not logged in" };
+    if (!user) throw new Error("User not authenticated");
+    const inputText = formValue.get("inputData") as string;
+    if (!inputText) {
+      return { error: "Please enter a comment" };
     }
-    if (!mongoose.Types.ObjectId.isValid(postId)) {
-      return { error: "Invalid post ID" };
-    }
-    const post = await Post.findById(postId);
-    if (!post) {
-      return { error: "Post not found" };
-    }
-    if (post?.user?.userId !== user.id) {
-      return { error: "You are not authorized to delete this post" };
-    }
-    try {
-      await Post.deleteOne({ _id: postId });
-      revalidatePath('/');
-      return { success: true };
-    } catch (error) {
-      console.error("Error in deleting the post:", error);
-      return { error: "Error in deleting the post" };
-    }
-  };
-  
+    const userData: UserInterFace = {
+      firstName: user.firstName || "pratiksmith",
+      lastName: user.lastName || "Khamari",
+      userId: user.id,
+      profilePhoto: user.imageUrl,
+    };
 
-// get all post using server actions
-// export const getAllPosts = async () => {
-//     try {
-//         await connectDB();
-//         const posts = await Post.find().sort({ createdAt: -1 }).populate({ path: 'comments', options: { sort: { createdAt: -1 } } });
-//         if(!posts) return [];
-//         return JSON.parse(JSON.stringify(posts));
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+    const post = await Post.findById({ _id: postId });
+    if (!post) throw new Error("Post not found");
 
-// // delete post by id
-// export const deletePostAction = async (postId: string) => {
-//     await connectDB();
-//     const user = await currentUser();
-//     if (!user) throw new Error('User not authenticated.');
-//     const post = await Post.findById(postId);
-//     if (!post) throw new Error('Post not found.');
+    const comment = await Comment.create({
+      text: inputText,
+      user: userData,
+    });
 
-//     // keval apni hi post delete kr payega.
-//     if (post.user.userId !== user.id) {
-//         throw new Error('You are not an owner of this Post.');
-//     }
-//     try {
-//         await Post.deleteOne({ _id: postId });
-//         revalidatePath("/");
-//     } catch (error: any) {
-//         throw new Error('An error occurred', error);
-//     }
-// }
+    post?.comments?.push(comment._id);
+    await post.save();
+    revalidatePath("/");
+  } catch (error) {
+    console.error("Error in creating the comment:", error);
+  }
+};
 
 // export const createCommentAction = async (postId: string, formData: FormData) => {
 //     try {
 //         const user = await currentUser();
-//         if (!user) throw new Error("User not authenticated");
+//
 //         const inputText = formData.get('inputText') as string;
 //         if (!inputText) throw new Error("Field is required");
 //         if (!postId) throw new Error("Post id required");

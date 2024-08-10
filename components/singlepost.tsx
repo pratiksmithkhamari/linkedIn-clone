@@ -22,6 +22,7 @@ const Singlepost = ({ post }: { post: any }) => {
             src={post?.user?.profilePhoto}
             height={200}
             width={200}
+            className="rounded-full cursor-pointer"
             alt="profile photo"
           />
         </div>

@@ -15,18 +15,16 @@ export default async function Home() {
   const user = await currentUser();
   console.log(user);
 
-  
-
   return (
     <main className="mt-7 ">
-      <div className=" flex gap-[2.1%] justify-center items-center">
-        <div className="side bg-red-600 relative  top-12 h-44 md:bg-violet-200 w-[21%] rounded-t-md">
+      <div className=" flex gap-[2.1%] justify-center items-center ">
+        <div className="side relative h-fit   w-[21%] rounded-t-md">
           <Sidebar userDetails={user} />
         </div>
         <div className="feed  min-h-[400px]  sm:w-[50%] ms:w-[70%] w-[100vw]">
-          <Feed userDetails={user}/>
+          <Feed userDetails={user} />
         </div>
-        <div className="right relative w-[25%]">
+        <div className="right relative w-[25%] h-[100vh]">
           <News />
         </div>
       </div>
