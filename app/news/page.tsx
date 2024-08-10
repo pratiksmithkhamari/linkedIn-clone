@@ -3,8 +3,14 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
+interface Article {
+  title: string;
+  urlToImage?: string;
+  content: string;
+}
+
 const News = () => {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
     fetchNews();
@@ -25,24 +31,27 @@ const News = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <h1 className="my-5 text-2xl font-bold text-zinc-800 capitalize">
-        See the lastest tech news
+        See the latest tech news
       </h1>
-      <div className="flex  justify-center  gap-11 flex-wrap ">
+      <div className="flex justify-center gap-11 flex-wrap">
         {articles.map((article, index) => (
-          <div className="min-h-[200px] cursor-pointer rounded-sm w-[300px] border-2 shadow-md p-2 " key={index}>
+          <div
+            className="min-h-[200px] cursor-pointer rounded-sm w-[300px] border-2 shadow-md p-2"
+            key={index}
+          >
             <Image
-              src={article.urlToImage}
+              src={article.urlToImage || "/path/to/placeholder/image.jpg"}
               height={300}
               width={300}
               alt="News Image"
               className="min-w-full max-h-[100px] hover:scale-95 ease-in overflow-hidden transition-all"
             />
-            <h2 className="line-clamp-1 my-4  text-xl font-semibold text-zinc-700">
-              {article?.title}
+            <h2 className="line-clamp-1 my-4 text-xl font-semibold text-zinc-700">
+              {article.title}
             </h2>
-            <p className="line-clamp-4">{article?.content}</p>
+            <p className="line-clamp-4">{article.content}</p>
           </div>
         ))}
       </div>
