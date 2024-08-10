@@ -10,6 +10,7 @@ export interface PostInterface {
 }
 
 export interface PostDocument extends PostInterface, Document {
+  _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
