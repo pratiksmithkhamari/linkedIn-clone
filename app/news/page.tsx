@@ -31,7 +31,7 @@ const News = () => {
       </h1>
       <div className="flex  justify-center  gap-11 flex-wrap ">
         {articles.map((article, index) => (
-          <div className="min-h-[200px] cursor-pointer rounded-sm w-[300px] border-2 shadow-md p-2 ">
+          <div className="min-h-[200px] cursor-pointer rounded-sm w-[300px] border-2 shadow-md p-2 " key={index}>
             <Image
               src={article.urlToImage}
               height={300}
