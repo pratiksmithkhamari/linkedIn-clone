@@ -60,7 +60,7 @@ const SocialMedia = ({ post }: { post: PostDocument }) => {
 
   const handleComment = () => {
     setCommentOpen(!commentOpen);
-  }
+  };
 
   const buttonContent = [
     {
@@ -85,13 +85,16 @@ const SocialMedia = ({ post }: { post: PostDocument }) => {
 
   return (
     <div className="w-[95%] justify-between items-center p-2 border-t-2">
-      
       {(likes && likes.length > 0) && (
         <p className="text-xm text-gray-500 hover:text-blue-500 hover:underline hover:cursor-pointer">
           {likes.length} likes
         </p>
       )}
-      {post.comments && post.comments.length > 0 && (<p className="text-blue-700 hover:underline hover:cursor-pointer">{post.comments.length}comments</p>)}
+      {post.comments && post.comments.length > 0 && (
+        <p className="text-blue-700 hover:underline hover:cursor-pointer">
+          {post.comments.length} comments
+        </p>
+      )}
       <div className="max-w-[100%] sm:max-w-[100%] mx-auto flex gap-4">
         {buttonContent.map((val, index) => (
           <Button
@@ -107,8 +110,9 @@ const SocialMedia = ({ post }: { post: PostDocument }) => {
       </div>
       {commentOpen && (
         <div className="text-zinc-800 transition-all ease-in">
-          <CommentInput postId={post._id}/>
-          <Comments post={post}/>
+          
+          <CommentInput postId={post._id.toString()} />
+          <Comments post={post} />
         </div>
       )}
     </div>

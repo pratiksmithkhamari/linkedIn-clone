@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 
+interface DialogeBoxProps {
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  show: boolean;
+  src: any; 
+}
+
 const readFileAsString = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      resolve(reader.result as string); // Ensure the result is a string
+      resolve(reader.result as string); 
     };
     reader.onerror = reject;
-    reader.readAsDataURL(file); // Read the file as a data URL
+    reader.readAsDataURL(file); 
   });
 };
 
-const MyComponent = () => {
+const DialogeBox: React.FC<DialogeBoxProps> = ({ setShow, show, src }) => {
   const [imgDataUrl, setImgDataUrl] = useState<string>("");
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,10 +30,21 @@ const MyComponent = () => {
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
-      {imgDataUrl && <img src={imgDataUrl} alt="Selected" />}
+      {show && (
+        <div className="dialog-box">
+          <button onClick={() => setShow(false)}>Close</button>
+          <div>
+            <input type="file" onChange={handleFileChange} />
+            {imgDataUrl && <img src={imgDataUrl} alt="Selected" />}
+          </div>
+          <div>
+            <p>User Info:</p>
+            <img src={src?.imageUrl} alt="User Avatar" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default MyComponent;
+export default DialogeBox;
