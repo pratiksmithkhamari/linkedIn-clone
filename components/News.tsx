@@ -57,7 +57,7 @@ const News = () => {
           <h2 className="text-zinc-500">Top Stories</h2>
         </div>
         <div className="ml-1">
-          {newsData.length > 0 ? (
+          {newsData?.length > 0 ? (
             newsData.map((article, index) => (
               <div
                 className="ml-2 my-1 hover:bg-slate-200 cursor-pointer w-full p-2 rounded-lg line-clamp-4"
