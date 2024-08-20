@@ -27,7 +27,7 @@ const News = () => {
     const getData = async () => {
       const data = await fetchNews();
       setNewsData(data);
-      console.log(data, "hruahdghavjv");
+     
     };
     getData();
   }, []);
@@ -63,9 +63,9 @@ const News = () => {
                 className="ml-2 my-1 hover:bg-slate-200 cursor-pointer w-full p-2 rounded-lg line-clamp-4"
                 key={index}
               >
-                - {article.title}
+                - {article?.title}
                 <p className="my-1 ml-3 text-zinc-600">
-                  <ReactTimeago date={article.publishedAt} />
+                  <ReactTimeago date={article?.publishedAt} />
                 </p>
               </div>
             ))

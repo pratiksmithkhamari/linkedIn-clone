@@ -24,7 +24,7 @@ const News = () => {
       const data = await response.json();
       console.log(data);
 
-      setArticles(data.articles);
+      setArticles(data?.articles);
     } catch (error) {
       console.error("Error fetching news:", error);
     }
@@ -49,9 +49,9 @@ const News = () => {
               className="min-w-full max-h-[100px] hover:scale-95 ease-in overflow-hidden transition-all"
             />
             <h2 className="line-clamp-1 my-4 text-xl font-semibold text-zinc-700">
-              {article.title}
+              {article?.title}
             </h2>
-            <p className="line-clamp-4">{article.content}</p>
+            <p className="line-clamp-4">{article?.content}</p>
           </div>
         ))}
       </div>
